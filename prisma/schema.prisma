@@ -62,6 +62,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    Comment       Comment[]
 }
 
 model VerificationToken {
@@ -70,4 +71,30 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Feed {
+    id           Int       @id @default(autoincrement())
+    title        String
+    content      String
+    image        String?
+    score        Int
+    commentCount Int
+    createdAt    Int
+    link         String
+    province     String
+    Comment      Comment[]
+}
+
+model Comment {
+    id        Int      @id @default(autoincrement())
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
+
+    feed   Feed @relation(fields: [feedId], references: [id])
+    feedId Int
 }
